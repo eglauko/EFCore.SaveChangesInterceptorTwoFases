@@ -39,16 +39,23 @@ scope.Dispose();
 scope = sp.CreateScope();
 db = scope.ServiceProvider.GetRequiredService<MyDbContext>();
 
-db.Add(new Blog()
-{
-    Id = 1,
-    Name= "Test",
-    Description= "Test",
-    Posts = new List<Post>()
-});
+db.Add(new Blog("Test", "Test"));
 
 db.SaveChanges();
 
 scope.Dispose();
+
+
+scope = sp.CreateScope();
+db = scope.ServiceProvider.GetRequiredService<MyDbContext>();
+
+Console.WriteLine("\nBlogs:");
+db.Set<Blog>().ToList().ForEach(b => Console.WriteLine(b));
+
+Console.WriteLine("\nEvents:");
+db.Set<DomainEventDetails>().ToList().ForEach(e => Console.WriteLine(e));
+
+Console.WriteLine("\nPress any key to finish...");
+Console.ReadKey();
 
 sp.Dispose();

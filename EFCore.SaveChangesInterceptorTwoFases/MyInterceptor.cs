@@ -50,9 +50,22 @@ public class MyInterceptor : SaveChangesInterceptor
         if (transactionManager.ManagedTransaction is not null)
         {
             if (transactionManager.Stage == 1)
-            { 
+            {
                 // executar segundo estágio
-                // todo
+                // não faça isso em apps reais, a performance pode cair muito.
+                foreach (var entry in eventData.Context.ChangeTracker.Entries())
+                {
+                    if(entry.Entity is IEntity entity)
+                    {
+                        foreach (var evt in entity.Events)
+                        {
+                            if (evt is ICreationEvent ce)
+                                ce.Saved();
+
+                            eventData.Context.Add(new DomainEventDetails(evt));
+                        }
+                    }
+                }
                 
                 // salvar pela segunda vez.
                 result += eventData.Context.SaveChanges();

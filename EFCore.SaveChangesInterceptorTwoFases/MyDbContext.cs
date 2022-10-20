@@ -12,5 +12,6 @@ public class MyDbContext : DbContext
     {
         modelBuilder.Entity<Blog>();
         modelBuilder.Entity<Post>();
+        modelBuilder.Entity<DomainEventDetails>();
     }
 }
